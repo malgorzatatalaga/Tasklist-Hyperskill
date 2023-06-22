@@ -36,11 +36,11 @@ fun main() {
 fun input(listOfTasks: MutableList<String>) {
     val scanner = Scanner(System.`in`)
     do {
-        val task = scanner.nextLine().trimIndent()
-        if (!task.isNullOrEmpty()) {
-            listOfTasks.add(task)
+        val multiTask = scanner.nextLine().trimIndent()
+        if (!multiTask.isEmpty()) {
+            listOfTasks.add(multiTask)
         }
-    } while (!task.isNullOrEmpty())
+    } while (!multiTask.isEmpty())
 }
 
 fun print(listOfTasks: MutableList<String>) {
