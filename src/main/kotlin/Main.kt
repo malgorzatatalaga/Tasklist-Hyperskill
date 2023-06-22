@@ -37,10 +37,10 @@ fun input(listOfTasks: MutableList<String>) {
     val scanner = Scanner(System.`in`)
     do {
         val multiTask = scanner.nextLine().trimIndent()
-        if (!multiTask.isEmpty()) {
+        if (multiTask.isNotEmpty()) {
             listOfTasks.add(multiTask)
         }
-    } while (!multiTask.isEmpty())
+    } while (multiTask.isNotEmpty())
 }
 
 fun print(listOfTasks: MutableList<String>) {
