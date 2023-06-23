@@ -9,7 +9,7 @@ fun main() {
 
     while (!end) {
         println("Input an action (add, print, end):")
-        when (scanner.nextLine().lowercase()) {
+        when (scanner.nextLine().lowercase().trimIndent()) {
             "end" -> {
                 println("Tasklist exiting!")
                 end = true
@@ -30,34 +30,55 @@ fun main() {
         }
     }
 
-
 }
 
 fun input(listOfTasks: MutableList<String>) {
     val scanner = Scanner(System.`in`)
-    do {
-        val multiTask = scanner.nextLine().trimIndent()
-        if (multiTask.isNotEmpty()) {
-            listOfTasks.add(multiTask)
+    var strings = ""
+    val firstInput = scanner.nextLine().trimIndent()
+    when {
+        firstInput.isNullOrBlank() -> {
+            println("The task is blank")
         }
-    } while (multiTask.isNotEmpty())
-}
 
-fun print(listOfTasks: MutableList<String>) {
-    if (listOfTasks.isEmpty()) {
-        println("No tasks have been input.")
-    } else {
-        for (i in 0 until listOfTasks.size) {
-            if (i > 8) {
-                val result = "${i + 1} ${listOfTasks[i]}"
-                println(result)
-            } else {
-                val result = "${i + 1}  ${listOfTasks[i]}"
-                println(result)
-            }
-
+        else -> {
+            strings += firstInput
+            strings += "$"
+            do {
+                val multiTask = scanner.nextLine().trimIndent()
+                if (multiTask.isNotEmpty()) {
+                    strings += multiTask
+                    strings += "$"
+                }
+            } while (multiTask.isNotEmpty())
+            listOfTasks.add(strings)
         }
     }
 }
+
+fun print(listOfTasks: MutableList<String>) {
+    when {
+        listOfTasks.isEmpty() -> {
+            println("No tasks have been input")
+        }
+
+        else -> {
+            for (i in 0 until listOfTasks.size) {
+                val list = listOfTasks[i].split("$")
+                val firstTask = list[0]
+                if (i <= 8) {
+                    println("${i + 1}  $firstTask")
+                } else {
+                    println("${i + 1} $firstTask")
+                }
+                for (i in 1 until list.size) {
+                    println("   ${list[i]}")
+                }
+                println()
+            }
+        }
+    }
+}
+
 
 
