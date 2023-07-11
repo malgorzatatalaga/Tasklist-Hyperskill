@@ -1,5 +1,7 @@
 package tasklist
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import java.util.*
 
 fun main() {
@@ -7,6 +9,7 @@ fun main() {
     val listOfTasks = mutableListOf<String>()
     var end = false
 
+    // menu
     while (!end) {
         println("Input an action (add, print, end):")
         when (scanner.nextLine().lowercase().trimIndent()) {
@@ -16,12 +19,13 @@ fun main() {
             }
 
             "add" -> {
+                val priority = inputPriorityAndDateTime()
                 println("Input a new task (enter a blank line to end):")
-                input(listOfTasks)
+                addTask(listOfTasks, priority)
             }
 
             "print" -> {
-                print(listOfTasks)
+                printListOfTasks(listOfTasks)
             }
 
             else -> {
@@ -32,23 +36,78 @@ fun main() {
 
 }
 
-fun input(listOfTasks: MutableList<String>) {
-    val scanner = Scanner(System.`in`)
+fun inputPriority(): String {
+    var priority: String
+    while (true) {
+        println("Input the task priority (C, H, N, L):")
+        priority = readln().uppercase().trimIndent()
+        if (priority == "C" || priority == "H" || priority == "N" || priority == "L") {
+            break
+        }
+    }
+    return priority
+}
+
+fun inputDate(): String {
+    var date = ""
+    var validDate = false
+    while (!validDate) {
+        println("Input the date (yyyy-mm-dd):")
+        try {
+            val dateList = readln().split("-")
+            val localDate = LocalDate(dateList[0].toInt(), dateList[1].toInt(), dateList[2].toInt())
+            date += localDate.toString().trimIndent()
+            validDate = true
+        } catch (e: IllegalArgumentException) {
+            println("The input date is invalid")
+        }
+    }
+    return date
+}
+
+fun inputTime(): String {
+    var time = ""
+    var validTime = false
+    while (!validTime) {
+        println("Input the time (hh:mm):")
+        try {
+            val timeList = readln().split(":")
+            val localTime = LocalTime(timeList[0].toInt(), timeList[1].toInt())
+            time += "${localTime.hour}:${localTime.minute}"
+        } catch (e: IllegalArgumentException) {
+            println("The input time is invalid")
+        } catch (e: NumberFormatException) {
+            println("The input time is invalid")
+        }
+    }
+    return time
+}
+
+fun inputPriorityAndDateTime(): String {
+    val priority = inputPriority()
+    val date = inputDate()
+    val time = inputTime()
+
+    return "$date $time $priority"
+}
+
+fun addTask(listOfTasks: MutableList<String>, priorityAndDateTime: String) {
     var strings = ""
+    val scanner = Scanner(System.`in`)
+    strings += "$priorityAndDateTime$"
+
     val firstInput = scanner.nextLine().trimIndent()
     when {
-        firstInput.isNullOrBlank() -> {
+        firstInput.isBlank() -> {
             println("The task is blank")
         }
 
         else -> {
-            strings += firstInput
-            strings += "$"
+            strings += "$firstInput$"
             do {
                 val multiTask = scanner.nextLine().trimIndent()
                 if (multiTask.isNotEmpty()) {
-                    strings += multiTask
-                    strings += "$"
+                    strings += "$multiTask$"
                 }
             } while (multiTask.isNotEmpty())
             listOfTasks.add(strings)
@@ -56,7 +115,7 @@ fun input(listOfTasks: MutableList<String>) {
     }
 }
 
-fun print(listOfTasks: MutableList<String>) {
+fun printListOfTasks(listOfTasks: MutableList<String>) {
     when {
         listOfTasks.isEmpty() -> {
             println("No tasks have been input")
@@ -79,6 +138,3 @@ fun print(listOfTasks: MutableList<String>) {
         }
     }
 }
-
-
-
