@@ -7,30 +7,29 @@ import java.util.*
 fun main() {
     val scanner = Scanner(System.`in`)
     val listOfTasks = mutableListOf<String>()
-    var end = false
 
-    // menu
-    while (!end) {
-        println("Input an action (add, print, end):")
+    while (true) {
+        println("Input an action (add, print, edit, delete, end):")
         when (scanner.nextLine().lowercase().trimIndent()) {
-            "end" -> {
-                println("Tasklist exiting!")
-                end = true
-            }
-
             "add" -> {
                 val priority = inputPriorityAndDateTime()
                 println("Input a new task (enter a blank line to end):")
                 addTask(listOfTasks, priority)
             }
 
-            "print" -> {
-                printListOfTasks(listOfTasks)
+            "print" -> printListOfTasks(listOfTasks)
+
+
+            "delete" -> deleteTask(listOfTasks)
+
+
+            "end" -> {
+                println("Tasklist exiting!")
+                break
             }
 
-            else -> {
-                println("The input action is invalid")
-            }
+            else -> println("The input action is invalid")
+
         }
     }
 
@@ -67,13 +66,13 @@ fun inputDate(): String {
 
 fun inputTime(): String {
     var time = ""
-    var validTime = false
-    while (!validTime) {
+    while (true) {
         println("Input the time (hh:mm):")
         try {
             val timeList = readln().split(":")
             val localTime = LocalTime(timeList[0].toInt(), timeList[1].toInt())
             time += "${localTime.hour}:${localTime.minute}"
+            break
         } catch (e: IllegalArgumentException) {
             println("The input time is invalid")
         } catch (e: NumberFormatException) {
@@ -134,6 +133,27 @@ fun printListOfTasks(listOfTasks: MutableList<String>) {
                     println("   ${list[i]}")
                 }
                 println()
+            }
+        }
+    }
+}
+
+fun deleteTask(listOfTasks: MutableList<String>) {
+    if (listOfTasks.isEmpty()) {
+        println("No tasks have been input")
+    } else {
+        println("Input the task number (1-${listOfTasks.size}):")
+        while (true) {
+            when (val taskNumber = readln().toInt()) {
+                !in 1..listOfTasks.size -> {
+                    println("Invalid task number")
+                }
+
+                else -> {
+                    listOfTasks.removeAt(taskNumber - 1)
+                    println("The task is deleted")
+                    break
+                }
             }
         }
     }
