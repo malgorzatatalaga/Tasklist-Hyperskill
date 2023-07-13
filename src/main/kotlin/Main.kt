@@ -35,6 +35,20 @@ fun main() {
 
 }
 
+class Task (var priority: String, var date: String, var time: String, var dueTag: String, var task: String) {
+    fun printInfo() {
+        println("$date $time $priority $dueTag")
+    }
+
+    fun printTasks() {
+        val listOfTasks = task.split("$")
+        for (singleTask in listOfTasks){
+            println("   $singleTask")
+            println()
+        }
+    }
+}
+
 fun inputPriority(): String {
     var priority: String
     while (true) {
