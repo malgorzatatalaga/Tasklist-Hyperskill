@@ -20,16 +20,18 @@ fun main() {
                 val priority = inputPriority()
                 val date = inputDate()
                 val time = inputTime()
+                val dueTag = addDueTag(date)
                 val task = addTask()
+                listOfTaskClass.add(Task(priority, date.toString(), time, dueTag, task))
 
             }
 
             "print" -> {
-
+                printListOfTasks(listOfTaskClass)
             }
 
             "delete" -> {
-
+                deleteTask(listOfTaskClass)
             }
 
             "edit" -> {
@@ -181,3 +183,74 @@ fun editPriority(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
     println("The task is changed")
 }
 
+fun editDate(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
+    val newDate = inputDate()
+    val newDueTag = addDueTag(newDate)
+    val oldTask = listOfTaskClass[taskNumber]
+    val newTask = Task(oldTask.priority, newDate.toString(), oldTask.time, newDueTag, oldTask.task)
+    listOfTaskClass.removeAt(taskNumber)
+    listOfTaskClass.add(taskNumber, newTask)
+    println("The task is changed")
+}
+
+fun editTime(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
+    val newTime = inputTime()
+    val oldTask = listOfTaskClass[taskNumber]
+    val newTask = Task(oldTask.priority, oldTask.date, newTime, oldTask.dueTag, oldTask.task)
+    listOfTaskClass.removeAt(taskNumber)
+    listOfTaskClass.add(taskNumber, newTask)
+    println("The task is changed")
+}
+
+fun editTask(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
+    val newTask = addTask()
+    val oldTask = listOfTaskClass[taskNumber]
+    val newTaskClassObject = Task(oldTask.priority, oldTask.date, oldTask.time, oldTask.dueTag, newTask)
+    listOfTaskClass.removeAt(taskNumber)
+    listOfTaskClass.add(taskNumber, newTaskClassObject)
+    println("The task is changed")
+}
+
+fun editTaskClassObject(listOfTaskClass: MutableList<Task>) {
+    if (listOfTaskClass.isEmpty()) {
+        println("No tasks have been input")
+    } else {
+        println("Input the task number (1-${listOfTaskClass.size}):")
+        loop@ while (true) {
+            var taskNumber = readln().toInt()
+            if (taskNumber !in 1..listOfTaskClass.size) {
+                println("Invalid task number")
+            } else {
+                taskNumber--
+                while (true) {
+                    println("Input a field to edit (priority, date, time, task):")
+                    when (readln()) {
+                        "priority" -> {
+                            editPriority(taskNumber, listOfTaskClass)
+                            break@loop
+                        }
+
+                        "date" -> {
+                            editDate(taskNumber, listOfTaskClass)
+                            break@loop
+                        }
+
+                        "time" -> {
+                            editTime(taskNumber, listOfTaskClass)
+                            break@loop
+                        }
+
+                        "task" -> {
+                            editTask(taskNumber, listOfTaskClass)
+                            break@loop
+                        }
+
+                        else -> {
+                            println("Invalid field")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
