@@ -35,7 +35,7 @@ fun main() {
             }
 
             "edit" -> {
-
+                editTaskClassObject(listOfTaskClass)
             }
 
             else -> {
@@ -93,16 +93,12 @@ fun inputTime(): String {
         println("Input the time (hh:mm):")
         try {
             val timeList = readln().split(":")
-            if (timeList[0].toInt() > 23 || timeList[0].toInt() < 0 || timeList[1].toInt() > 59 || timeList[0].toInt() < 0) {
-                println("The input time is invalid")
-            } else {
-                time += "${timeList[0]}:${timeList[1]}"
-                validTime = true
-            }
+            val localTime = LocalTime(timeList[0].toInt(), timeList[1].toInt())
+            time += localTime.toString()
+            validTime = true
         } catch (e: Exception) {
             println("The input time is invalid")
         }
-
     }
     return time
 }
