@@ -153,18 +153,23 @@ fun deleteTask(listOfTaskClass: MutableList<Task>) {
     if (listOfTaskClass.isEmpty()) {
         println("No tasks have been input")
     } else {
-        println("Input the task number (1-${listOfTaskClass.size}):")
+        printListOfTasks(listOfTaskClass)
         while (true) {
-            when (val taskNumber = readln().toInt()) {
-                !in 1..listOfTaskClass.size -> {
-                    println("Invalid task number")
-                }
+            try {
+                println("Input the task number (1-${listOfTaskClass.size}):")
+                when (val taskNumber = readln().toInt()) {
+                    !in 1..listOfTaskClass.size -> {
+                        println("Invalid task number")
+                    }
 
-                else -> {
-                    listOfTaskClass.removeAt(taskNumber - 1)
-                    println("The task is deleted")
-                    break
+                    else -> {
+                        listOfTaskClass.removeAt(taskNumber - 1)
+                        println("The task is deleted")
+                        break
+                    }
                 }
+            } catch (e: NumberFormatException) {
+                println("Invalid task number")
             }
         }
     }
@@ -211,41 +216,46 @@ fun editTaskClassObject(listOfTaskClass: MutableList<Task>) {
     if (listOfTaskClass.isEmpty()) {
         println("No tasks have been input")
     } else {
-        println("Input the task number (1-${listOfTaskClass.size}):")
+        printListOfTasks(listOfTaskClass)
         loop@ while (true) {
-            var taskNumber = readln().toInt()
-            if (taskNumber !in 1..listOfTaskClass.size) {
-                println("Invalid task number")
-            } else {
-                taskNumber--
-                while (true) {
-                    println("Input a field to edit (priority, date, time, task):")
-                    when (readln()) {
-                        "priority" -> {
-                            editPriority(taskNumber, listOfTaskClass)
-                            break@loop
-                        }
+            try {
+                println("Input the task number (1-${listOfTaskClass.size}):")
+                var taskNumber = readln().toInt()
+                if (taskNumber !in 1..listOfTaskClass.size) {
+                    println("Invalid task number")
+                } else {
+                    taskNumber--
+                    while (true) {
+                        println("Input a field to edit (priority, date, time, task):")
+                        when (readln()) {
+                            "priority" -> {
+                                editPriority(taskNumber, listOfTaskClass)
+                                break@loop
+                            }
 
-                        "date" -> {
-                            editDate(taskNumber, listOfTaskClass)
-                            break@loop
-                        }
+                            "date" -> {
+                                editDate(taskNumber, listOfTaskClass)
+                                break@loop
+                            }
 
-                        "time" -> {
-                            editTime(taskNumber, listOfTaskClass)
-                            break@loop
-                        }
+                            "time" -> {
+                                editTime(taskNumber, listOfTaskClass)
+                                break@loop
+                            }
 
-                        "task" -> {
-                            editTask(taskNumber, listOfTaskClass)
-                            break@loop
-                        }
+                            "task" -> {
+                                editTask(taskNumber, listOfTaskClass)
+                                break@loop
+                            }
 
-                        else -> {
-                            println("Invalid field")
+                            else -> {
+                                println("Invalid field")
+                            }
                         }
                     }
                 }
+            } catch (e: NumberFormatException) {
+                println("Invalid task number")
             }
         }
     }
