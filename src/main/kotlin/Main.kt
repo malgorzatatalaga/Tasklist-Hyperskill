@@ -1,7 +1,7 @@
 package tasklist
 
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
+import kotlinx.datetime.*
+import kotlinx.datetime.TimeZone
 import java.util.*
 
 fun main() {
@@ -43,14 +43,14 @@ fun main() {
     }
 }
 
-class Task (var priority: String, var date: String, var time: String, var dueTag: String, var task: String) {
+class Task(var priority: String, var date: String, var time: String, var dueTag: String, var task: String) {
     fun printInfo() {
         println("$date $time $priority $dueTag")
     }
 
     fun printTasks() {
         val listOfTasks = task.split("$")
-        for (singleTask in listOfTasks){
+        for (singleTask in listOfTasks) {
             println("   $singleTask")
             println()
         }
@@ -103,6 +103,18 @@ fun inputTime(): String {
 
     }
     return time
+}
+
+fun addDueTag(localDate: LocalDate): String {
+    var dueTag = ""
+    val currentDate = Clock.System.now().toLocalDateTime(TimeZone.of("UTC+0")).date
+    val numberOfDays = currentDate.daysUntil(localDate)
+    when {
+        numberOfDays == 0 -> dueTag = "T"
+        numberOfDays > 0 -> dueTag = "I"
+        numberOfDays < 0 -> dueTag = "O"
+    }
+    return dueTag
 }
 
 fun addTask(): String {
@@ -168,3 +180,4 @@ fun editPriority(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
     listOfTaskClass.add(taskNumber, newTask)
     println("The task is changed")
 }
+
