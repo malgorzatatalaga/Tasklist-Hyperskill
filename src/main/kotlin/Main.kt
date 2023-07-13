@@ -159,3 +159,12 @@ fun deleteTask(listOfTaskClass: MutableList<Task>) {
         }
     }
 }
+
+fun editPriority(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
+    val newPriority = inputPriority()
+    val oldTask = listOfTaskClass[taskNumber]
+    val newTask = Task(newPriority, oldTask.date, oldTask.time, oldTask.dueTag, oldTask.task)
+    listOfTaskClass.removeAt(taskNumber)
+    listOfTaskClass.add(taskNumber, newTask)
+    println("The task is changed")
+}
