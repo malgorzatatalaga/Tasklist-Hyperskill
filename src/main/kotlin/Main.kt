@@ -122,43 +122,36 @@ fun addTask(): String {
     return taskInput
 }
 
-fun printListOfTasks(listOfTasks: MutableList<String>) {
-    when {
-        listOfTasks.isEmpty() -> {
-            println("No tasks have been input")
-        }
-
-        else -> {
-            for (i in 0 until listOfTasks.size) {
-                val list = listOfTasks[i].split("$")
-                val firstTask = list[0]
-                if (i <= 8) {
-                    println("${i + 1}  $firstTask")
-                } else {
-                    println("${i + 1} $firstTask")
-                }
-                for (i in 1 until list.size) {
-                    println("   ${list[i]}")
-                }
-                println()
+fun printListOfTasks(listOfTaskClass: MutableList<Task>) {
+    if (listOfTaskClass.isEmpty()) {
+        println("No tasks have been input")
+    } else {
+        for ((i, task) in listOfTaskClass.withIndex()) {
+            if (i <= 8) {
+                print("${i + 1}  ") //2
+                task.printInfo()
+            } else {
+                print("${i + 1} ") //1
+                task.printInfo()
             }
+            task.printTasks()
         }
     }
 }
 
-fun deleteTask(listOfTasks: MutableList<String>) {
-    if (listOfTasks.isEmpty()) {
+fun deleteTask(listOfTaskClass: MutableList<Task>) {
+    if (listOfTaskClass.isEmpty()) {
         println("No tasks have been input")
     } else {
-        println("Input the task number (1-${listOfTasks.size}):")
+        println("Input the task number (1-${listOfTaskClass.size}):")
         while (true) {
             when (val taskNumber = readln().toInt()) {
-                !in 1..listOfTasks.size -> {
+                !in 1..listOfTaskClass.size -> {
                     println("Invalid task number")
                 }
 
                 else -> {
-                    listOfTasks.removeAt(taskNumber - 1)
+                    listOfTaskClass.removeAt(taskNumber - 1)
                     println("The task is deleted")
                     break
                 }
