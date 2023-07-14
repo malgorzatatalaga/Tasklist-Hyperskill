@@ -25,8 +25,8 @@ fun startTasklist() {
                 val date = inputDate()
                 val time = inputTime()
                 val dueTag = addDueTag(date)
-                val task = addTask()
-                listOfTaskClass.add(Task(priority, date.toString(), time, dueTag, task))
+                val tasks = addTask()
+                listOfTaskClass.add(Task(priority, date.toString(), time, dueTag, tasks))
 
             }
 
@@ -49,17 +49,24 @@ fun startTasklist() {
     }
 }
 
-class Task(var priority: String, var date: String, var time: String, var dueTag: String, var task: String) {
+class Task(var priority: String, var date: String, var time: String, var dueTag: String, var tasks: MutableList<String>) {
     fun printInfo() {
-        println("$date $time $priority $dueTag")
+        print("| $date | $time | $priority | $dueTag ")
     }
 
     fun printTasks() {
-        val listOfTasks = task.split("$")
-        for (singleTask in listOfTasks) {
-            println("   $singleTask")
-            println()
+        val firstTask = tasks[0].chunked(44)
+        println("|${firstTask[0].padEnd(44)}|")
+        for (x in 1 until firstTask.size) {
+            println("|    |            |       |   |   |${firstTask[x].padEnd(44)}|")
         }
+        for (i in 1 until tasks.size) {
+            val task = tasks[i].chunked(44)
+            for (x in task.indices) {
+                println("|    |            |       |   |   |${task[x].padEnd(44)}|")
+            }
+        }
+        println("+----+------------+-------+---+---+--------------------------------------------+")
     }
 }
 
@@ -135,21 +142,21 @@ fun addDueTag(localDate: LocalDate): String {
     return dueTag
 }
 
-fun addTask(): String {
+fun addTask(): MutableList<String> {
     println("Input a new task (enter a blank line to end):")
-    var taskInput = ""
+    val listOfTasks = mutableListOf<String>()
     val firstInput = readln().trimIndent().trimEnd()
     if (firstInput.isBlank()) {
         println("The task is blank")
     } else {
-        taskInput += firstInput
+        listOfTasks.add(firstInput)
         do {
             val singleTask = readln().trimIndent().trimEnd()
             if (singleTask.isBlank()) continue
-            taskInput += "$$singleTask"
+            listOfTasks.add(singleTask)
         } while (singleTask.isNotEmpty())
     }
-    return taskInput
+    return listOfTasks
 }
 
 fun printListOfTasks(listOfTaskClass: MutableList<Task>) {
@@ -198,7 +205,7 @@ fun deleteTask(listOfTaskClass: MutableList<Task>) {
 fun editPriority(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
     val newPriority = inputPriority()
     val oldTask = listOfTaskClass[taskNumber]
-    val newTask = Task(newPriority, oldTask.date, oldTask.time, oldTask.dueTag, oldTask.task)
+    val newTask = Task(newPriority, oldTask.date, oldTask.time, oldTask.dueTag, oldTask.tasks)
     listOfTaskClass.removeAt(taskNumber)
     listOfTaskClass.add(taskNumber, newTask)
     println("The task is changed")
@@ -208,7 +215,7 @@ fun editDate(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
     val newDate = inputDate()
     val newDueTag = addDueTag(newDate)
     val oldTask = listOfTaskClass[taskNumber]
-    val newTask = Task(oldTask.priority, newDate.toString(), oldTask.time, newDueTag, oldTask.task)
+    val newTask = Task(oldTask.priority, newDate.toString(), oldTask.time, newDueTag, oldTask.tasks)
     listOfTaskClass.removeAt(taskNumber)
     listOfTaskClass.add(taskNumber, newTask)
     println("The task is changed")
@@ -217,7 +224,7 @@ fun editDate(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
 fun editTime(taskNumber: Int, listOfTaskClass: MutableList<Task>) {
     val newTime = inputTime()
     val oldTask = listOfTaskClass[taskNumber]
-    val newTask = Task(oldTask.priority, oldTask.date, newTime, oldTask.dueTag, oldTask.task)
+    val newTask = Task(oldTask.priority, oldTask.date, newTime, oldTask.dueTag, oldTask.tasks)
     listOfTaskClass.removeAt(taskNumber)
     listOfTaskClass.add(taskNumber, newTask)
     println("The task is changed")
