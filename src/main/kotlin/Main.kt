@@ -5,6 +5,10 @@ import kotlinx.datetime.TimeZone
 import java.util.*
 
 fun main() {
+    startTasklist()
+}
+
+fun startTasklist() {
     val scanner = Scanner(System.`in`)
     val listOfTaskClass = mutableListOf<Task>()
 
