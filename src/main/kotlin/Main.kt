@@ -68,12 +68,28 @@ fun inputPriority(): String {
     while (true) {
         println("Input the task priority (C, H, N, L):")
         priority = readln().uppercase().trimIndent()
-        if (priority == "C" || priority == "H" || priority == "N" || priority == "L") {
-            break
+        when (priority) {
+            "C" -> {
+                priority = "\u001B[101m \u001B[0m" //Red
+                break
+            }
+            "H" -> {
+                priority = "\u001B[103m \u001B[0m" //Yellow
+                break
+            }
+            "N" -> {
+                priority = "\u001B[102m \u001B[0m" //Green
+                break
+            }
+            "L" -> {
+                priority = "\u001B[104m \u001B[0m" //Blue
+                break
+            }
         }
     }
     return priority
 }
+
 
 fun inputDate(): LocalDate {
     var date: LocalDate
@@ -112,9 +128,9 @@ fun addDueTag(localDate: LocalDate): String {
     val currentDate = Clock.System.now().toLocalDateTime(TimeZone.of("UTC+0")).date
     val numberOfDays = currentDate.daysUntil(localDate)
     when {
-        numberOfDays == 0 -> dueTag = "T"
-        numberOfDays > 0 -> dueTag = "I"
-        numberOfDays < 0 -> dueTag = "O"
+        numberOfDays == 0 -> dueTag = "\u001B[103m \u001B[0m" //Today
+        numberOfDays > 0 -> dueTag = "\u001B[102m \u001B[0m" //In time
+        numberOfDays < 0 -> dueTag = "\u001B[101m \u001B[0m" //Overdue
     }
     return dueTag
 }
