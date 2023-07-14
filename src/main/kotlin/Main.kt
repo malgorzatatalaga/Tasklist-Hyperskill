@@ -49,7 +49,13 @@ fun startTasklist() {
     }
 }
 
-class Task(var priority: String, var date: String, var time: String, var dueTag: String, var tasks: MutableList<String>) {
+class Task(
+    var priority: String,
+    var date: String,
+    var time: String,
+    var dueTag: String,
+    var tasks: MutableList<String>
+) {
     fun printInfo() {
         print("| $date | $time | $priority | $dueTag ")
     }
@@ -80,14 +86,17 @@ fun inputPriority(): String {
                 priority = "\u001B[101m \u001B[0m" //Red
                 break
             }
+
             "H" -> {
                 priority = "\u001B[103m \u001B[0m" //Yellow
                 break
             }
+
             "N" -> {
                 priority = "\u001B[102m \u001B[0m" //Green
                 break
             }
+
             "L" -> {
                 priority = "\u001B[104m \u001B[0m" //Blue
                 break
@@ -163,15 +172,22 @@ fun printListOfTasks(listOfTaskClass: MutableList<Task>) {
     if (listOfTaskClass.isEmpty()) {
         println("No tasks have been input")
     } else {
+        println(
+            "+----+------------+-------+---+---+--------------------------------------------+\n" +
+                    "| N  |    Date    | Time  | P | D |                   Task                     |\n" +
+                    "+----+------------+-------+---+---+--------------------------------------------+"
+        )
         for ((i, task) in listOfTaskClass.withIndex()) {
-            if (i <= 8) {
-                print("${i + 1}  ") //2
+            if (i < 9) {
+                print("| ${i + 1}  ") //2 spaces
                 task.printInfo()
+                task.printTasks()
             } else {
-                print("${i + 1} ") //1
+                print("| ${i + 1} ") //1 space
                 task.printInfo()
+                task.printTasks()
             }
-            task.printTasks()
+
         }
     }
 }
