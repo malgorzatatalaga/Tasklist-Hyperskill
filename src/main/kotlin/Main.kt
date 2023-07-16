@@ -1,7 +1,11 @@
 package tasklist
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
+import java.io.File
 import java.util.*
 
 fun main() {
@@ -10,24 +14,26 @@ fun main() {
 
 fun startTasklist() {
     val scanner = Scanner(System.`in`)
-    val listOfTaskClass = mutableListOf<Task>()
+    var listOfTaskClass = mutableListOf<Task>()
+
+    val jsonFile = File("tasklist.json")
+    if (jsonFile.exists()) {
+        listOfTaskClass = readFromJSON(jsonFile)!!
+    }
 
     while (true) {
         println("Input an action (add, print, edit, delete, end):")
         when (scanner.nextLine().lowercase().trimIndent()) {
             "end" -> {
+                if (listOfTaskClass.isNotEmpty()) {
+                    writeToJSON(jsonFile, listOfTaskClass)
+                }
                 println("Tasklist exiting!")
                 break
             }
 
             "add" -> {
-                val priority = inputPriority()
-                val date = inputDate()
-                val time = inputTime()
-                val dueTag = addDueTag(date)
-                val tasks = addTask()
-                listOfTaskClass.add(Task(priority, date.toString(), time, dueTag, tasks))
-
+                createTaskObject(listOfTaskClass)
             }
 
             "print" -> {
@@ -76,6 +82,35 @@ class Task(
     }
 }
 
+fun readFromJSON(jsonFile: File): MutableList<Task>? {
+    val jsonString = jsonFile.readText()
+    val moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+    val type = Types.newParameterizedType(MutableList::class.java, Task::class.java)
+    val mutableListJsonAdapter = moshi.adapter<MutableList<Task>>(type)
+    return mutableListJsonAdapter.fromJson(jsonString)
+}
+
+fun writeToJSON(jsonFile: File, listOfTaskClass: MutableList<Task>) {
+    if (!jsonFile.exists()) jsonFile.createNewFile()
+    val moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+    val type = Types.newParameterizedType(MutableList::class.java, Task::class.java)
+    val mutableListJsonAdapter = moshi.adapter<MutableList<Task>>(type)
+    val jsonString = mutableListJsonAdapter.toJson(listOfTaskClass)
+    jsonFile.appendText(jsonString)
+}
+
+fun createTaskObject(listOfTaskClass: MutableList<Task>) {
+    val priority = inputPriority()
+    val date = inputDate()
+    val time = inputTime()
+    val dueTag = addDueTag(date)
+    val tasks = addTask()
+    listOfTaskClass.add(Task(priority, date.toString(), time, dueTag, tasks))
+}
 fun inputPriority(): String {
     var priority: String
     while (true) {
