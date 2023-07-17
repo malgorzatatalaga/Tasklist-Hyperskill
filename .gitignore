@@ -1,4 +1,13 @@
 # Default ignored files
-/shelf/
-/.idea/
+.idea/vcs.xml
+.idea/libraries
+.idea/shelf
+.idea/workspace.xml
+/.idea/.name
+.DS_Store
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
 
