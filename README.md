@@ -1,5 +1,5 @@
 # Project name: Tasklist
-Project to simplyfy task management. 
+Project to simplify task management. 
 Completed as a part of the Kotlin Core track provided by Hyperskill.
 ## Features
 ### Priority and due tags
